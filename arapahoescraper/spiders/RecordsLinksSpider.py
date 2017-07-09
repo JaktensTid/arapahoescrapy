@@ -57,7 +57,7 @@ class RecordsLinksSpider(scrapy.Spider):
     name = 'linksspider'
     date_formatter = "%m/%d/%Y"
 
-    start_urls = ['https://legacy4.arapahoegov.com/oncoreweb/Search.aspx']
+    start_urls = ['http://legacy4.arapahoegov.com/oncoreweb/Search.aspx']
 
     def __init__(self, **kwargs):
         self.failed_urls = []
