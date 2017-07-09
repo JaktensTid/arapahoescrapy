@@ -23,7 +23,6 @@ SCHEDULER_MEMORY_QUEUE = 'scrapy.squeue.FifoMemoryQueue'
 #USER_AGENT = 'arapahoescraper (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
 MONGODB_URI = os.environ['MONGODB_URI']
 MONGODB_DB = 'data'
 MONGODB_COLLECTION = 'arapahoerecords'
