@@ -8,7 +8,7 @@ from scrapy.core.downloader.contextfactory import ScrapyClientContextFactory
 
 class CustomClientContextFactory(ScrapyClientContextFactory):
     def getContext(self, hostname=None, port=None):
-        ctx = ClientContextFactory.getContext(self)
+        ctx = ScrapyClientContextFactory.getContext(self)
         # Enable all workarounds to SSL bugs as documented by
         # http://www.openssl.org/docs/ssl/SSL_CTX_set_options.html
         ctx.set_options(SSL.OP_ALL)
