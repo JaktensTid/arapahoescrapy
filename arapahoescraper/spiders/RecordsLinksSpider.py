@@ -6,6 +6,7 @@ from scrapy.xlib.pydispatch import dispatcher
 from selenium import webdriver
 from datetime import datetime, timedelta
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from twisted.internet.error import TCPTimedOutError, TimeoutError
 
 count = 0
 
@@ -57,6 +58,8 @@ class RecordsLinksSpider(scrapy.Spider):
     name = 'linksspider'
     date_formatter = "%m/%d/%Y"
 
+    start_urls = ["http://legacy4.arapahoegov.com/oncoreweb/Search.aspx"]
+
     def __init__(self, **kwargs):
         self.failed_urls = []
         self.end_date = datetime.strptime('01/01/1980', self.date_formatter)
@@ -72,12 +75,13 @@ class RecordsLinksSpider(scrapy.Spider):
         close_webdriver(self.driver)
 
     def start_requests(self):
-        yield scrapy.Request("http://legacy4.arapahoegov.com/oncoreweb/Search.aspx", callback=self.parse,
-                                 errback=self.errback_httpbin,
-                                 dont_filter=True)
+        for url in self.start_urls:
+            yield scrapy.Request(url, callback=self.parse,
+                                     errback=self.errback_httpbin,
+                                     dont_filter=True)
 
     def errback_httpbin(self, failure):
-        if failure.check(TimeoutError):
+        if failure.check(TimeoutError, TCPTimedOutError):
             request = failure.request
             self.logger.error('TimeoutError on %s', request.url)
 
