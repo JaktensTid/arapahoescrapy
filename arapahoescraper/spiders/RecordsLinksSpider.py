@@ -74,17 +74,6 @@ class RecordsLinksSpider(scrapy.Spider):
         self.crawler.stats.set_value('failed_urls', ','.join(spider.failed_urls))
         close_webdriver(self.driver)
 
-    def start_requests(self):
-        for url in self.start_urls:
-            yield scrapy.Request(url, callback=self.parse,
-                                     errback=self.errback_httpbin,
-                                     dont_filter=True)
-
-    def errback_httpbin(self, failure):
-        if failure.check(TimeoutError, TCPTimedOutError):
-            request = failure.request
-            self.logger.error('TimeoutError on %s', request.url)
-
     def parse(self, response):
         exception_message = '- - - - No Such Element Exception'
         elements_by_xpath = self.driver.find_elements_by_xpath
