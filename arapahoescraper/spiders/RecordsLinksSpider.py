@@ -62,8 +62,8 @@ class RecordsLinksSpider(scrapy.Spider):
 
     def __init__(self, **kwargs):
         self.failed_urls = []
-        self.end_date = datetime.strptime('01/01/1980', self.date_formatter)
-        self.start_date = datetime.strptime('06/22/2015', self.date_formatter)
+        self.end_date = datetime.strptime('06/22/2015', self.date_formatter)
+        self.start_date = datetime.strptime('01/01/1980', self.date_formatter)
         print('Scraping from ' + str(self.start_date))
         self.driver = webdriver.PhantomJS(os.path.join(os.path.dirname(__file__), 'bin/phantomjs'))
         self.driver.set_page_load_timeout(30)
@@ -73,6 +73,17 @@ class RecordsLinksSpider(scrapy.Spider):
     def spider_closed(self, spider):
         self.crawler.stats.set_value('failed_urls', ','.join(spider.failed_urls))
         close_webdriver(self.driver)
+        
+    def start_requests(self):
+        for url in self.start_urls:
+            yield scrapy.Request(url, callback=self.parse,
+                                     errback=self.errback_httpbin,
+                                     dont_filter=True)
+
+    def errback_httpbin(self, failure):
+        if failure.check(TimeoutError, TCPTimedOutError):
+            request = failure.request
+            self.logger.error('TimeoutError on %s', request.url)
 
     def parse(self, response):
         exception_message = '- - - - No Such Element Exception'
