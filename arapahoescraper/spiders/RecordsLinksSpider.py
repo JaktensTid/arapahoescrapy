@@ -57,14 +57,10 @@ class RecordsLinksSpider(scrapy.Spider):
     name = 'linksspider'
     date_formatter = "%m/%d/%Y"
 
-    start_urls = []
-
-
-
     def __init__(self, **kwargs):
         self.failed_urls = []
-        self.end_date = datetime.today()
-        self.start_date = datetime.strptime('06/22/2015', format=self.date_formatter)
+        self.end_date = datetime.strptime('06/22/2015', self.date_formatter)
+        self.start_date = datetime.strptime('01/01/1980', self.date_formatter)
         print('Scraping from ' + str(self.start_date))
         self.driver = webdriver.PhantomJS(os.path.join(os.path.dirname(__file__), 'bin/phantomjs'))
         self.driver.set_page_load_timeout(30)
@@ -76,8 +72,7 @@ class RecordsLinksSpider(scrapy.Spider):
         close_webdriver(self.driver)
 
     def start_requests(self):
-        for u in self.start_urls:
-            yield scrapy.Request("http://legacy4.arapahoegov.com/oncoreweb/Search.aspx", callback=self.parse,
+        yield scrapy.Request("http://legacy4.arapahoegov.com/oncoreweb/Search.aspx", callback=self.parse,
                                  errback=self.errback_httpbin,
                                  dont_filter=True)
 
