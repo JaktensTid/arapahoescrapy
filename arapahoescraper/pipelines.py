@@ -18,7 +18,7 @@ class MongodbPipeLine(object):
                 try:
                     self.collection.insert_one(item)
                 except DuplicateKeyError:
-                    print('Duplicate key')
+                    pass
             return item
 
 
