@@ -66,8 +66,9 @@ class RecordsLinksSpider(scrapy.Spider):
         self.failed_urls = []
         client = MongoClient(settings['MONGODB_URI'])
         collection = client.data.arapahoerecords
-        dates = [datetime.strptime(date[0], self.date_formatter)
-                 for date in collection.find({}, {'recordDate' : 1, '_id' : 0})]
+        dates = [date for date in collection.find({}, {'recordDate' : 1, '_id' : 0})]
+        dates = [datetime.strptime(date['recordDate'].split(' ')[0], self.date_formatter)
+                 for date in dates if date['recordDate'].split(' ')[0]]
         dates.sort()
         client.close()
         self.start_date = datetime.strptime('01/01/1980', self.date_formatter)
