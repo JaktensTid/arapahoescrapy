@@ -118,7 +118,7 @@ class RecordsLinksSpider(scrapy.Spider):
                     for e in elements_by_xpath(".//a[@class='stdFontResults']")]))
 
         def next_date(total):
-            if total % 5 == 0:
+            if total % 10 == 0:
                 self.driver.delete_all_cookies()
                 total = 0
             try:
@@ -138,11 +138,9 @@ class RecordsLinksSpider(scrapy.Spider):
         for date in self.dates():
             next_date(total)
             total += 1
-            hrefs = get_hrefs()
-            for href in hrefs:
-                request = scrapy.Request(href,
+            for href in get_hrefs():
+                yield scrapy.Request(href,
                                          callback=self.parse_item)
-                yield request
             next = next_page()
             while next:
                 try:
@@ -151,21 +149,17 @@ class RecordsLinksSpider(scrapy.Spider):
                     self.driver.refresh()
                     next = next_page()
                     next.click()
-                hrefs = get_hrefs()
-                for href in hrefs:
-                    request = scrapy.Request(href,
+                for href in get_hrefs():
+                    yield scrapy.Request(href,
                                              callback=self.parse_item)
-                    yield request
                 next = next_page()
-            #log.msg(str(date), level=log.ERROR, spider=self)
-
+        print('Stopped')
         self.driver.close()
 
     def parse_item(self, response):
         if response.status == 404:
             self.failed_urls.append(response.url)
             return {}
-        #log.msg('Scraping ' + str(response.url), level=log.ERROR, spider=self)
         item = {}
         search_pattern = [('instrument', 'lblCfn'), ('docType', 'lblDocumentType'), ('modifyDate', 'lblModifyDate'),
                           ('recordDate', 'lblRecordDate'), ('acknowledgementDate', 'lblAcknowledgementDate'),
