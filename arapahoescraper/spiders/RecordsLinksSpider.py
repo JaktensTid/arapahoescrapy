@@ -8,6 +8,7 @@ from selenium import webdriver
 from datetime import datetime, timedelta
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from twisted.internet.error import TCPTimedOutError, TimeoutError
+from pymongo import MongoClient
 
 count = 0
 
@@ -63,7 +64,7 @@ class RecordsLinksSpider(scrapy.Spider):
 
     def __init__(self, **kwargs):
         self.failed_urls = []
-        collection = settings['MONGODB_URI'].data.arapahoerecords
+        collection = MongoClient(settings['MONGODB_URI']).data.arapahoerecords
         count = collection.find().count()
         last_date = collection.find().skip(count - 1)[0]['recordDate'].split(' ')[0]
         self.end_date = datetime.strptime('01/01/1980', self.date_formatter)
