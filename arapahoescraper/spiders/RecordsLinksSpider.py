@@ -62,8 +62,11 @@ class RecordsLinksSpider(scrapy.Spider):
 
     def __init__(self, **kwargs):
         self.failed_urls = []
-        self.end_date = datetime.strptime('06/22/2015', self.date_formatter)
-        self.start_date = datetime.strptime('01/01/1980', self.date_formatter)
+        collection = self.settings['MONGODB_URI'].data.arapahoerecords
+        count = collection.find().count()
+        last_date = collection.find().skip(count - 1)[0]['recordDate'].split(' ')[0]
+        self.end_date = datetime.strptime('01/01/1980', self.date_formatter)
+        self.start_date = datetime.strptime(last_date, self.date_formatter)
         print('Scraping from ' + str(self.start_date))
         self.driver = webdriver.PhantomJS(os.path.join(os.path.dirname(__file__), 'bin/phantomjs'))
         self.driver.set_page_load_timeout(30)
