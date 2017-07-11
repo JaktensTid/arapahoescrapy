@@ -3,6 +3,7 @@ import re
 import scrapy
 from scrapy import log, signals
 from scrapy.xlib.pydispatch import dispatcher
+from scrapy.conf import settings
 from selenium import webdriver
 from datetime import datetime, timedelta
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
@@ -62,7 +63,7 @@ class RecordsLinksSpider(scrapy.Spider):
 
     def __init__(self, **kwargs):
         self.failed_urls = []
-        collection = self.settings['MONGODB_URI'].data.arapahoerecords
+        collection = settings['MONGODB_URI'].data.arapahoerecords
         count = collection.find().count()
         last_date = collection.find().skip(count - 1)[0]['recordDate'].split(' ')[0]
         self.end_date = datetime.strptime('01/01/1980', self.date_formatter)
