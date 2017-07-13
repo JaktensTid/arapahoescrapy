@@ -40,7 +40,7 @@ DOWNLOAD_DELAY = 0.25
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
 
-# Disable cookies (enabled by default)
+# Disable cookies (enabled by default)r
 #COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
@@ -76,7 +76,7 @@ ITEM_PIPELINES = {
      'arapahoescraper.pipelines.MongodbPipeLine' : 300
 }
 
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG' #INFO
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
