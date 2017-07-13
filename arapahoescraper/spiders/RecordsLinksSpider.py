@@ -7,7 +7,7 @@ from scrapy.conf import settings
 from selenium import webdriver
 from datetime import datetime, timedelta
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-from twisted.internet.error import TCPTimedOutError, TimeoutError
+from twisted.internet.error import TimeoutError
 from pymongo import MongoClient
 
 count = 0
@@ -60,8 +60,6 @@ class RecordsLinksSpider(scrapy.Spider):
     name = 'linksspider'
     date_formatter = "%m/%d/%Y"
 
-    start_urls = ["http://legacy4.arapahoegov.com/oncoreweb/Search.aspx"]
-
     def __init__(self, **kwargs):
         self.failed_urls = []
         client = MongoClient(settings['MONGODB_URI'])
@@ -84,13 +82,13 @@ class RecordsLinksSpider(scrapy.Spider):
         close_webdriver(self.driver)
         
     def start_requests(self):
-        for url in self.start_urls:
+        for url in ["http://legacy4.arapahoegov.com/oncoreweb/Search.aspx"]:
             yield scrapy.Request(url, callback=self.parse,
                                      errback=self.errback_httpbin,
                                      dont_filter=True)
 
     def errback_httpbin(self, failure):
-        if failure.check(TimeoutError, TCPTimedOutError):
+        if failure.check(TimeoutError):
             request = failure.request
             self.logger.error('TimeoutError on %s', request.url)
 
