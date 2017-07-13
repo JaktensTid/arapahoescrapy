@@ -60,6 +60,8 @@ class RecordsLinksSpider(scrapy.Spider):
     name = 'linksspider'
     date_formatter = "%m/%d/%Y"
 
+    start_url = "http://legacy4.arapahoegov.com/oncoreweb/Search.aspx"
+
     def __init__(self, **kwargs):
         self.failed_urls = []
         client = MongoClient(settings['MONGODB_URI'])
@@ -130,7 +132,7 @@ class RecordsLinksSpider(scrapy.Spider):
                 date_input.send_keys(date.strftime(self.date_formatter))
                 submit.click()
             except NoSuchElementException:
-                self.driver.get(self.start_urls[0])
+                self.driver.get(self.start_url)
                 next_date(total)
 
         self.driver.get(response.url)
