@@ -1,10 +1,7 @@
 import gc
-from scrapy.crawler import CrawlerProcess
-from scrapy.utils.project import get_project_settings
+import subprocess
 
 while True:
-    process = CrawlerProcess(get_project_settings())
-    process.crawl('linksspider')
-    print('- - - - - Starting spider')
-    process.start(stop_after_crawl=False)
+    process = subprocess.Popen('scrapy crawl linksspider', shell=True, stdout=subprocess.PIPE)
+    process.wait()
     gc.collect()
