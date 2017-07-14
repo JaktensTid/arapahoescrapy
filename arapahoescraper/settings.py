@@ -76,7 +76,7 @@ ITEM_PIPELINES = {
      'arapahoescraper.pipelines.MongodbPipeLine' : 300
 }
 
-LOG_LEVEL = 'WARNING' #INFO
+LOG_LEVEL = 'INFO' #INFO
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
