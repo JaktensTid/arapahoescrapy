@@ -6,5 +6,5 @@ while True:
     process = CrawlerProcess(get_project_settings())
     process.crawl('linksspider')
     print('- - - - - Starting spider')
-    process.start()
+    process.start(stop_after_crawl=False)
     gc.collect()
